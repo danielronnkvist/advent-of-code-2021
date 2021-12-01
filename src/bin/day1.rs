@@ -1,9 +1,5 @@
 fn main() {
-    let lines = advent_of_code::read_lines("inputs/day1.txt")
-        .unwrap()
-        .into_iter()
-        .map(|depth| depth.unwrap().parse::<i32>().expect("parse line as i32"))
-        .collect::<Vec<i32>>();
+    let lines: Vec<i32> = advent_of_code::read_and_parse("inputs/day1.txt");
 
     let mut p1 = 0;
     let mut p2 = 0;
