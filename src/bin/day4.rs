@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 type BoardNumber = (i32, bool);
 type BoardRow = [BoardNumber; 5];
 type Board = [BoardRow; 5];
@@ -62,16 +64,29 @@ fn main() {
 
     let mut found: Option<Board> = None;
     let mut trigger: Option<i32> = None;
+
+    let board_count = boards.len();
+    let mut count: HashSet<usize> = HashSet::new();
+    let mut last: Option<Board> = None;
+    let mut last_trigger: Option<i32> = None;
+
     'a: for number in &numbers {
-        for board in &mut boards {
+        for (index, board) in &mut boards.iter_mut().enumerate() {
             for i in 0..5 {
                 for j in 0..5 {
                     if board[i][j].0 == *number {
                         board[i][j].1 = true;
-                        if let Some(_) = check_board(*board) {
-                            found = Some(*board);
-                            trigger = Some(*number);
-                            break 'a;
+                        if check_board(*board).is_some() {
+                            count.insert(index);
+                            if found.is_none() {
+                                found = Some(*board);
+                                trigger = Some(*number);
+                            }
+                            if count.len() == board_count {
+                                last = Some(*board);
+                                last_trigger = Some(*number);
+                                break 'a;
+                            }
                         }
                     }
                 }
@@ -86,4 +101,13 @@ fn main() {
             .fold(0, |s, n| if n.1 == false { s + n.0 } else { s })
     });
     println!("Puzzle 1: {}", sum * trigger);
+
+    let last = last.unwrap();
+    let last_trigger = last_trigger.unwrap();
+    let sum = last.iter().fold(0, |sum, row| {
+        sum + row
+            .iter()
+            .fold(0, |s, n| if n.1 == false { s + n.0 } else { s })
+    });
+    println!("Puzzle 2: {}", sum * last_trigger);
 }
