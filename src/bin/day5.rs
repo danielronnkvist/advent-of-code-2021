@@ -36,31 +36,16 @@ fn main() {
         let x2 = line[1][0];
         let y1 = line[0][1];
         let y2 = line[1][1];
-        if line[0][0] == line[1][0] {
-            for y in y1.min(y2)..=y1.max(y2) {
-                let key = [line[0][0], y];
-                insert(&mut straight_lines, key);
-                insert(&mut diagonal_lines, key);
-            }
-        } else if line[0][1] == line[1][1] {
-            for x in x1.min(x2)..=x1.max(x2) {
-                let key = [x, line[0][1]];
-                insert(&mut straight_lines, key);
-                insert(&mut diagonal_lines, key);
-            }
-        } else {
-            let x_step = match x1 < x2 {
-                true => 1,
-                false => -1,
-            };
-            let y_step = match y1 < y2 {
-                true => 1,
-                false => -1,
-            };
 
-            for i in 0..=(x1.max(x2) - x1.min(x2)) {
-                let key = [x1 + (x_step * i), y1 + (y_step * i)];
-                insert(&mut diagonal_lines, key);
+        let x_step = x1.cmp(&x2) as i32;
+        let y_step = y1.cmp(&y2) as i32;
+        let range_target = (x1.max(x2) - x1.min(x2)).max(y1.max(y2) - y1.min(y2));
+
+        for i in 0..=range_target {
+            let key = [x1 - (x_step * i), y1 - (y_step * i)];
+            insert(&mut diagonal_lines, key);
+            if x_step == 0 || y_step == 0 {
+                insert(&mut straight_lines, key);
             }
         }
     }
