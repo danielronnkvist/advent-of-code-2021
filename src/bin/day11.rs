@@ -28,7 +28,8 @@ fn main() {
         .collect();
 
     let mut p1 = 0;
-    for _ in 0..100 {
+    let mut i = 0;
+    loop {
         for y in 0..10 {
             for x in 0..10 {
                 // Step 1
@@ -42,14 +43,26 @@ fn main() {
         }
 
         // Step 3
+        let mut all = true;
         for y in 0..10 {
             for x in 0..10 {
                 if map[y][x] > 9 {
                     map[y][x] = 0;
-                    p1 += 1;
+                    if i < 100 {
+                        p1 += 1;
+                    }
+                } else {
+                    all = false;
                 }
             }
         }
+
+        if all {
+            break;
+        }
+
+        i += 1;
     }
     println!("Puzzle 1: {}", p1);
+    println!("Puzzle 2: {}", i + 1);
 }
